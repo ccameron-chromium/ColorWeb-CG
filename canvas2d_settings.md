@@ -54,17 +54,32 @@ It appears that not including this in `OffscreenCanvasRenderingContext2D` was an
 
 The proposed fix is to add a new interface
 ```idl
-  interface mixin CanvasSettings {
+  interface mixin CanvasBitmap {
     CanvasRenderingContext2DSettings getContextAttributes();
   }
 ```
 
 Include this in both `CanvasRenderingContext2D` and `OffscreenCanvasRenderingContext2D`.
 ```
-  CanvasRenderingContext2D includes CanvasSettings;
-  OffscreenCanvasRenderingContext2D includes CanvasSettings;
+  CanvasRenderingContext2D includes CanvasBitmap;
+  OffscreenCanvasRenderingContext2D includes CanvasBitmap;
 ```
 
-Then add a section for "the canvas settings" (similar to the existing ["the canvas state"](https://html.spec.whatwg.org/multipage/canvas.html#the-canvas-state)) which includes the text from `CanvasRenderingContext2D`'s output bitmap, origin-clean, alpha, desynchronized, will read frequently, color space, and `getContextAttributes` method.
+Then add a section for "the canvas settings" (similar to the existing ["the canvas state"](https://html.spec.whatwg.org/multipage/canvas.html#the-canvas-state)) which includes the text from `CanvasRenderingContext2D`'s
+* [output bitmap](https://html.spec.whatwg.org/multipage/canvas.html#output-bitmap)
+* origin-clean
+* [alpha](https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-alpha)
+* [desynchronized](https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-desynchronized)
+* [will read frequently](https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-will-read-frequently)
+* [color space](https://html.spec.whatwg.org/multipage/canvas.html#concept-canvas-color-space)
+* [`getContextAttributes`](https://html.spec.whatwg.org/multipage/canvas.html#dom-context-2d-canvas-getcontextattributes)
 
 This will implicitly add `willReadFrequently`, `desynchronized`, and `getContextAttributes` to `OffscreenCanvasRenderingContext2D`, which were supposed to be there anyway, and will prevent this sort of thing from happening again.
+
+## Issues
+
+The name `CanvasBitmap` does not impact future compatibility.
+
+I originally had it be `CanvasSettings`, but that made the spec less clear.
+All of the various settings have something to do with setting up the bitmap or displaying it.
+
