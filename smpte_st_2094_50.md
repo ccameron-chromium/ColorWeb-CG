@@ -69,7 +69,7 @@ To the `CanvasToneMappingMode` enum, add a mode indicating that SMPTE ST 2094-50
   };
 ```
 
-When the canvas has its tone mapping's `mode` set to `"smpte-st-2094-50"`, then the contents of its `smpteSt2094_50ApplicationInfo` blob will be for tone mapping.
+When the canvas has its tone mapping's `mode` set to `"smpte-st-2094-50"`, then the contents of its `smpte_st_2094_50` dictionary will be for tone mapping.
 
 Images that result from calls to `toBlob` and `toDataURL` shall have the SMPTE ST 2094-50 metadata embedded in their ICC profile.
 
@@ -83,7 +83,51 @@ This specification will add a new entry for the `smpte_st_2094_50_application_in
 
 ```idl
   partial dictionary {
-    Blob smpteSt2094_50ApplicationInfo;
+    SmpteSt_2094_50_ColorVolumeTransform smpte_st_2094_50_color_volume_transform;
+  }
+
+  dictionary SmpteSt_2094_50_ColorVolumeTransform {
+    float hdrReferenceWhite;
+    optional SmpteSt_2094_50_HeadroomAdaptiveToneMap headroomAdaptiveToneMap;
+  }
+  dictionary SmpteSt_2094_50_HeadroomAdaptiveToneMap {
+    float baselineHdrHeadroom;
+    sequence<SmpteSt_2094_50_AlternateImage> alternateImages;
+    SmpteSt_2094_50_ColorPrimaries gainApplicationSpaceColorPrimaries;
+  }
+  dictionary SmpteSt_2094_50_AlternateImage {
+    float hdrHeadroom;
+    SmpteSt_2094_50_ColorGainFunction colorGainFunction;
+  }
+  dictionary SmpteSt_2094_50_ColorGainFunction {
+    SmpteSt_2094_50_ComponentMix componentMix;
+    SmpteSt_2094_50_GainCurve gainCurve;
+  }
+  dictionary SmpteSt_2094_50_ComponentMix {
+    float red;
+    float green;
+    float blue;
+    float min;
+    float max;
+    float channel;
+  }
+  dictionary SmpteSt_2094_50_GainCurve {
+    sequence<SmpteSt_2094_50_ControlPoint> controlPoints;
+  }
+  dictionary SmpteSt_2094_50_ControlPoint {
+    float x;
+    float y;
+    float m;
+  }
+  dictionary SmpteSt_2094_50_ColorPrimaries {
+    SmpteSt_2094_50_ChromaticityCoordinates red;
+    SmpteSt_2094_50_ChromaticityCoordinates green;
+    SmpteSt_2094_50_ChromaticityCoordinates blue;
+    SmpteSt_2094_50_ChromaticityCoordinates white;
+  }
+  dictionary SmpteSt_2094_50_ChromaticityCoordinates {
+    float x;
+    float y;
   }
 ```
 
