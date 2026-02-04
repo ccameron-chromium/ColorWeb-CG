@@ -82,10 +82,11 @@ Add a new specification to the [VideoFrame Metadata Registry](https://w3c.github
 This specification will add a new entry for the `smpte_st_2094_50_application_info` metadata bitstream.
 
 ```idl
-  partial dictionary {
+  partial dictionary VideoFrameMetadata {
     SmpteSt_2094_50_ColorVolumeTransform smpte_st_2094_50_color_volume_transform;
   }
 
+  // The SMPTE ST 2094-50 color volume transform metadata structure.
   dictionary SmpteSt_2094_50_ColorVolumeTransform {
     float hdrReferenceWhite;
     optional SmpteSt_2094_50_HeadroomAdaptiveToneMap headroomAdaptiveToneMap;
