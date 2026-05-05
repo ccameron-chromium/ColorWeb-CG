@@ -1,0 +1,121 @@
+Name
+
+    EXT_surface_attribv
+
+Name Strings
+
+    EGL_EXT_surface_attribv
+
+Contributors
+
+    Alec Mouri
+    Christopher Cameron
+    John Reck
+
+Contact
+
+    Christopher Cameron (ccameron 'at' chromium.org)
+
+IP Status
+
+    XXX
+
+Status
+
+    Draft
+
+Version
+
+     Version 1 - May 5, 2026
+
+Number
+
+    EGL Extension #XXX
+
+Dependencies
+
+    These extensions are written against the wording of the EGL 1.5
+    specification (August 27, 2014).
+
+Overview
+
+    This extension defines functions to set and query surface attributes
+    using pointers, enabling the communication of complex metadata to the
+    platform.
+
+New Procedures and Functions
+
+    EGLBoolean eglSetSurfaceAttribvEXT(EGLDisplay dpy,
+                                       EGLSurface surface,
+                                       EGLint attribute,
+                                       EGLsizei size,
+                                       const void* ptr);
+
+    EGLBoolean eglQuerySurfaceAttribvEXT(EGLDisplay dpy,
+                                         EGLSurface surface,
+                                         EGLint attribute,
+                                         EGLsizei* size,
+                                         void* ptr);
+
+New Tokens
+
+    None.
+
+Modifications to the EGL 1.5 Specification
+
+    Modify section 3.5.6 (Surface Attributes), adding the following after the
+    description of eglSurfaceAttrib:
+
+    "To set an attribute which is specified by a pointer, use:
+
+        EGLBoolean eglSetSurfaceAttribvEXT(EGLDisplay dpy,
+                                           EGLSurface surface,
+                                           EGLint attribute,
+                                           EGLsizei size,
+                                           const void* ptr);
+
+    <dpy> and <surface> are as described for eglSurfaceAttrib. <attribute> is
+    the attribute to be set. <size> is the size of the data in bytes pointed
+    to by <ptr>. <ptr> is a pointer to the data to be set.
+
+    eglSetSurfaceAttribvEXT returns EGL_TRUE on success, and EGL_FALSE
+    otherwise. If <attribute> is not supported for eglSetSurfaceAttribvEXT,
+    the error EGL_BAD_ATTRIBUTE is generated."
+
+    Modify section 3.5.6 (Surface Attributes), adding the following
+    after the description of eglQuerySurface:
+
+    "To query an attribute which is returned via a pointer, use:
+
+        EGLBoolean eglQuerySurfaceAttribvEXT(EGLDisplay dpy,
+                                             EGLSurface surface,
+                                             EGLint attribute,
+                                             EGLsizei* size,
+                                             void* ptr);
+
+    <dpy> and <surface> are as described for eglQuerySurface. <attribute> is
+    the attribute to be queried.
+
+    If <ptr> is NULL, then the size of the buffer required to store the
+    attribute's value is returned in <size>.
+
+    If <ptr> is not NULL, then on input <size> must contain the size of the
+    buffer pointed to by <ptr>, and on output <size> will contain the number
+    of bytes actually written to <ptr>.
+
+    eglQuerySurfaceAttribvEXT returns EGL_TRUE on success, and EGL_FALSE
+    otherwise. If <attribute> is not supported for eglQuerySurfaceAttribvEXT,
+    the error EGL_BAD_ATTRIBUTE is generated."
+
+Errors
+
+    TODO.
+
+Issues
+
+    1. XXX
+
+Revision History
+
+    Version 1, 2026/05/05
+      - Initial commit

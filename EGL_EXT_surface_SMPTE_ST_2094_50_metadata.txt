@@ -1,0 +1,163 @@
+Name
+
+    EXT_surface_SMPTE_ST_2094_50_metadata
+
+Name Strings
+
+    EGL_EXT_surface_SMPTE_ST_2094_50_metadata
+
+Contributors
+
+    Alec Mouri
+    Christopher Cameron
+    John Reck
+
+Contact
+
+    Christopher Cameron (ccameron 'at' chromium.org)
+
+IP Status
+
+    XXX
+
+Status
+
+    Draft
+
+Version
+
+     Version 1 - May 5, 2026
+
+Number
+
+    EGL Extension #XXX
+
+Dependencies
+
+    These extensions are written against the wording of the EGL 1.5
+    specification (August 27, 2014).
+
+    Requires EGL_EXT_surface_attribv.
+
+Overview
+
+    The SMPTE ST 2094-50 standard defines dynamic metadata for use in high
+    dynamic range (HDR) image sequences. This metadata provides information
+    for tone mapping of image content to displays with different
+    characteristics than the mastering display.
+
+    This extension provides a mechanism for an application to pass SMPTE
+    ST 2094-50 metadata to the EGL implementation. This is done by setting
+    the EGL_SMPTE_ST_2094_50_METADATA_EXT attribute of an EGLSurface.
+
+    In addition, the EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT attribute
+    allows an application to suggest a trade-off between color accuracy and
+    power consumption. When set to EGL_SMPTE_ST_2094_50_PREFER_LOW_POWER_EXT,
+    the implementation may use simplified tone mapping algorithms to reduce
+    power consumption, while still maintaining accuracy for greyscale content
+    and providing reasonable behavior for color content.
+
+New Procedures and Functions
+
+    None.
+
+New Tokens
+
+    Accepted as an attribute name in the <attribute> parameter of 
+    eglSetSurfaceAttribvEXT and eglQuerySurfaceAttribvEXT:
+
+        EGL_SMPTE_ST_2094_50_METADATA_EXT               0xXXXX
+
+    Accepted as an attribute name in the <attribute> parameter of
+    eglSetSurfaceAttrib and eglQuerySurfaceAttrib:
+
+        EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT       0xXXXX
+
+    Accepted as an attribute value in the <value> parameter of
+    eglSetSurfaceAttrib:
+
+        EGL_SMPTE_ST_2094_50_PREFER_COLOR_ACCURACY_EXT  0xXXXX
+        EGL_SMPTE_ST_2094_50_PREFER_LOW_POWER_EXT       0xXXXX
+
+Modifications to the EGL 1.5 Specification
+
+    Add to Table 3.5 (Summary of surface attributes):
+
+    Attribute                                  Type    Default
+    -----------------------------------------  ------- -----------------------
+    EGL_SMPTE_ST_2094_50_METADATA_EXT          pointer NULL
+    EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT  enum    EGL_SMPTE_ST_2094_50_
+                                                       PREFER_COLOR_ACCURACY_EXT
+
+    Attribute                                  Description
+    -----------------------------------------  ----------------------------------
+    EGL_SMPTE_ST_2094_50_METADATA_EXT          SMPTE ST 2094-50 metadata
+    EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT  Accuracy vs power consumption
+
+    Modify section 3.5.6 (Surface Attributes):
+
+    "If <attribute> is EGL_SMPTE_ST_2094_50_METADATA_EXT, then <ptr> points to
+    a buffer of <size> bytes containing the SMPTE ST 2094-50 metadata to be
+    associated with the surface. The buffer must contain the
+    smpte_st_2094_50_application_info() bitstream as defined in section
+    C.2.1 (Application syntax) of SMPTE ST 2094-50.
+
+    If the metadata in the buffer fails to parse according to the specified
+    syntax, or if the encoded metadata violates any normative constraints
+    of the SMPTE ST 2094-50 specification, then eglSetSurfaceAttribvEXT will
+    fail and an EGL_BAD_PARAMETER error will be generated.
+
+    The metadata specifies how the implementation should perform tone
+    mapping, as described in Annex A of the SMPTE ST 2094-50 specification.
+    The color space of the input signal to this tone mapping process is
+    specified by the EGL_GL_COLORSPACE attribute of the surface.
+
+    For all color spaces that do not use the PQ or HLG transfer functions
+    (including EGL_GL_COLORSPACE_SCRGB_LINEAR_EXT,
+    EGL_GL_COLORSPACE_DISPLAY_P3_LINEAR_EXT, and
+    EGL_GL_COLORSPACE_BT2020_LINEAR_EXT), an input pixel value of 1.0
+    corresponds to input linear display-light luminance equal to the HDR
+    reference white, and a value of 1.0 in the gain application color space.
+    The displayed color for a pixel value of [1,1,1,1] will match the HDR
+    reference white of the output display (which also matches UI white and
+    nominal peak SDR white).
+
+    If <attribute> is EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT, then the
+    value specifies a trade-off between color accuracy and power consumption
+    when rendering using SMPTE ST 2094-50 metadata.
+
+    If the value is EGL_SMPTE_ST_2094_50_PREFER_COLOR_ACCURACY_EXT, then
+    rendering is guaranteed to be accurate to the SMPTE ST 2094-50
+    specification.
+
+    If the value is EGL_SMPTE_ST_2094_50_PREFER_LOW_POWER_EXT, then the
+    rendering of greyscale color is guaranteed to be accurate to the SMPTE
+    ST 2094-50 specification, but the behavior of the component mixing
+    function might not match what is specified in the metadata. For example,
+    an implementation could use maxRGB or ICtCp based tone mapping (as
+    described in ITU-R BT.2408) if there is a significant power savings."
+
+    The values of the EGL_SMPTE_ST_2094_50_METADATA_EXT and
+    EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT attributes are latched and
+    become effective when eglSwapBuffers is called for the surface."
+
+Errors
+
+    eglSetSurfaceAttribvEXT generates EGL_BAD_PARAMETER if the metadata
+    buffer violates the SMPTE ST 2094-50 specification.
+
+    eglSetSurfaceAttrib and eglSetSurfaceAttribvEXT generate EGL_BAD_ATTRIBUTE
+    if the attribute is not supported by the implementation.
+
+    eglSetSurfaceAttrib and eglSetSurfaceAttribvEXT generate EGL_BAD_MATCH
+    if the attribute is set on a surface type that does not support
+    SMPTE ST 2094-50 metadata.
+
+Issues
+
+    1. XXX
+
+Revision History
+
+    Version 1, 2026/05/05
+      - Initial commit
