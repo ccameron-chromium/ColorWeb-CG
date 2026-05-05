@@ -43,8 +43,8 @@ Overview
 
     The SMPTE ST 2094-50 standard defines dynamic metadata for use in high
     dynamic range (HDR) image sequences. This metadata provides information
-    for tone mapping of image content to displays with different
-    characteristics than the mastering display.
+    for tone mapping of image content to displays characterized by their
+    HDR headroom.
 
     This extension provides a mechanism for an application to pass SMPTE
     ST 2094-50 metadata to the EGL implementation. This is done by setting
@@ -155,7 +155,15 @@ Errors
 
 Issues
 
-    1. XXX
+    1. How does this interact with other HDR metadata? E.g, if one were to
+       specify metadata from another spec in the ST 2094 series, which is
+       considered authoritative?
+
+       This issue also comes up in the context of video (which can carry
+       multiple metadata). There is a need for a meta-metadata specification
+       that characterizes the applications and indicates the relative priority
+       of the algorithms to apply for those applications. There is ongoing
+       work in this direction already.
 
 Revision History
 
