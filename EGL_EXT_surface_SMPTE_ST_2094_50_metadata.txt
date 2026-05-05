@@ -102,11 +102,6 @@ Modifications to the EGL 1.5 Specification
     smpte_st_2094_50_application_info() bitstream as defined in section
     C.2.1 (Application syntax) of SMPTE ST 2094-50.
 
-    If the metadata in the buffer fails to parse according to the specified
-    syntax, or if the encoded metadata violates any normative constraints
-    of the SMPTE ST 2094-50 specification, then eglSetSurfaceAttribvEXT will
-    fail and an EGL_BAD_PARAMETER error will be generated.
-
     The metadata specifies how the implementation should perform tone
     mapping, as described in Annex A of the SMPTE ST 2094-50 specification.
     The color space of the input signal to this tone mapping process is
@@ -121,6 +116,11 @@ Modifications to the EGL 1.5 Specification
     The displayed color for a pixel value of [1,1,1,1] will match the HDR
     reference white of the output display (which also matches UI white and
     nominal peak SDR white).
+
+    If the metadata in the buffer fails to parse according to the specified
+    syntax, or if the encoded metadata violates any normative constraints
+    of the SMPTE ST 2094-50 specification, the tone mapping behavior at
+    display time is undefined.
 
     If <attribute> is EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT, then the
     value specifies a trade-off between color accuracy and power consumption
@@ -138,13 +138,11 @@ Modifications to the EGL 1.5 Specification
     described in ITU-R BT.2408) if there is a significant power savings."
 
     The values of the EGL_SMPTE_ST_2094_50_METADATA_EXT and
-    EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT attributes are latched and
-    become effective when eglSwapBuffers is called for the surface."
+    EGL_SMPTE_ST_2094_50_POWER_PREFERENCE_EXT attributes that are used for
+    displaying the surface are latched and become effective when eglSwapBuffers
+    is called for the surface."
 
 Errors
-
-    eglSetSurfaceAttribvEXT generates EGL_BAD_PARAMETER if the metadata
-    buffer violates the SMPTE ST 2094-50 specification.
 
     eglSetSurfaceAttrib and eglSetSurfaceAttribvEXT generate EGL_BAD_ATTRIBUTE
     if the attribute is not supported by the implementation.
@@ -159,11 +157,28 @@ Issues
        specify metadata from another spec in the ST 2094 series, which is
        considered authoritative?
 
-       This issue also comes up in the context of video (which can carry
-       multiple metadata). There is a need for a meta-metadata specification
-       that characterizes the applications and indicates the relative priority
-       of the algorithms to apply for those applications. There is ongoing
-       work in this direction already.
+       Proposed: No. This issue also comes up in the context of video (which
+       can carry multiple metadata). There is a need for a meta-metadata
+       specification that characterizes the applications and indicates the
+       relative priority of the algorithms to apply for those applications.
+       There is ongoing work in this direction already, and addressing this in
+       the EGL extension would create more complicated interactions.
+
+    2. Should the implementation be required to validate the SMPTE ST 2094-50
+       bitstream?
+
+       Proposed: No. Many implementations will simply forward the metadata to
+       another lower-level API, which will be responsible for validation.
+
+    3. For color spaces that do not use the PQ or HLG transfer functions, why
+       is a pixel value of 1.0 defined to be the HDR reference white?
+
+       Proposed: This differs from some conventions (e.g. scRGB, where 1.0 is
+       defined as 80 nits). In practice, absolute luminance is unusable outside
+       of reference environments. Normalizing so that 1.0 matches HDR reference
+       white (which matches nominal peak SDR, which matches UI white, which
+       matches CSS #FFFFFF) provides much more predictable behavior across
+       devices and viewing environments.
 
 Revision History
 
