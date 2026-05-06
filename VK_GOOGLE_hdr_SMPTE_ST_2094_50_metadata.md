@@ -54,7 +54,7 @@ XXX
 
 This extension provides a mechanism for an application to attach
 SMPTE ST 2094-50 metadata to a swapchain via the
-`VkHdrSmpteSt2094_50GOOGLE` structure.
+`VkHdrSmpteSt2094_50_GOOGLE` structure.
 
 The SMPTE ST 2094-50 standard defines dynamic metadata for use in high
 dynamic range (HDR) image sequences. This metadata provides information
@@ -65,18 +65,18 @@ HDR headroom.
 
 * Extending VkHdrMetadataGOOGLE
 
-  * `VkHdrSmpteSt2094_50GOOGLE`
+  * `VkHdrSmpteSt2094_50_GOOGLE`
 
 ```C
-typedef struct VkHdrSmpteSt2094_50GOOGLE {
-  VkStructureType                          sType;
-  const void*                              pNext;
-  size_t                                   metadataSize;
-  const void*                              metadataAddress;
-  VkHdrSmpteSt2094_50PowerPreferenceGOOGLE powerPreference;
-  VkHdrSmpteSt2094_50HdrHeadroomGOOGLE      hdrHeadroom;
-  float                                    hdrHeadroomLimit;
-} VkHdrSmpteSt2094_50GOOGLE;
+typedef struct VkHdrSmpteSt2094_50_GOOGLE {
+  VkStructureType                           sType;
+  const void*                               pNext;
+  size_t                                    metadataSize;
+  const void*                               metadataAddress;
+  VkHdrSmpteSt2094_50_PowerPreferenceGOOGLE powerPreference;
+  VkHdrSmpteSt2094_50_HdrHeadroomGOOGLE     hdrHeadroom;
+  float                                     hdrHeadroomLimit;
+} VkHdrSmpteSt2094_50_GOOGLE;
 ```
 
 * The `metadataSize` member indicates the size of the buffer pointed to by
@@ -86,7 +86,7 @@ typedef struct VkHdrSmpteSt2094_50GOOGLE {
   SMPTE ST 2094-50. This data is copied during the call to
   `vkSetHdrMetadataExt`, and the buffer may be modified or freed after the call.
   No validation is performed on the contents of this buffer.
-* The `powerPreference` member of the `VkHdrSmpteSt2094_50GOOGLE` structure
+* The `powerPreference` member of the `VkHdrSmpteSt2094_50_GOOGLE` structure
   allows an application to suggest a trade-off between color accuracy and
   power consumption.
   * When set to `VK_HDR_SMPTE_ST_2094_50_PREFER_COLOR_ACCURACY_GOOGLE`,
@@ -98,7 +98,7 @@ typedef struct VkHdrSmpteSt2094_50GOOGLE {
     and providing reasonable behavior for color content (e.g, by using ICtCp
     or maxRGB tone mapping, as described in Step 5 of Annex 5 of
     [ITU-R BT.2408-8](https://www.itu.int/pub/R-REP-BT.2408-8-2024)).
-* The `hdrHeadroom` member of the  `VkHdrSmpteSt2094_50GOOGLE` structure
+* The `hdrHeadroom` member of the  `VkHdrSmpteSt2094_50_GOOGLE` structure
   allows an application to control the targeted HDR headroom for tone mapping.
   * When set to `VK_HDR_SMPTE_ST_2094_50_HDR_HEADROOM_NATIVE_GOOGLE`,
     the implementation will tone map to the display's native HDR headroom.
@@ -113,15 +113,15 @@ typedef struct VkHdrSmpteSt2094_50GOOGLE {
   * `VK_STRUCTURE_TYPE_HDR_SMPTE_ST_2094_50_METADATA_GOOGLE`
 
 ```C
-typedef enum VkHdrSmpteSt2094_50PowerPreferenceGOOGLE
+typedef enum VkHdrSmpteSt2094_50_PowerPreferenceGOOGLE
   VK_HDR_SMPTE_ST_2094_50_PREFER_COLOR_ACCURACY_GOOGLE = 0,
   VK_HDR_SMPTE_ST_2094_50_PREFER_LOW_POWER_GOOGLE = 1,
-} VkHdrSmpteSt2094_50PowerPreferenceGOOGLE;
+} VkHdrSmpteSt2094_50_PowerPreferenceGOOGLE;
 
-typedef enum VkHdrSmpteSt2094_50HdrHeadroomGOOGLE
+typedef enum VkHdrSmpteSt2094_50_HdrHeadroomGOOGLE
   VK_HDR_SMPTE_ST_2094_50_HDR_HEADROOM_NATIVE_GOOGLE = 0,
   VK_HDR_SMPTE_ST_2094_50_HDR_HEADROOM_LIMITED_GOOGLE = 1,
-} VkHdrSmpteSt2094_50HdrHeadroomGOOGLE;
+} VkHdrSmpteSt2094_50_HdrHeadroomGOOGLE;
 ```
 
 ## Version History
